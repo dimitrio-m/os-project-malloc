@@ -1,0 +1,64 @@
+# ===========================
+# 1. Artefactos de Compilación
+# ===========================
+# Archivos objeto
+*.o
+*.obj
+
+# Archivos ejecutables (Linux/Mac/Windows)
+test_runner
+*.out
+*.exe
+*.app
+
+# Librerías estáticas y dinámicas
+*.a
+*.so
+*.dylib
+*.dll
+
+# ===========================
+# 2. Directorios de Build
+# ===========================
+# Carpeta generada por el Makefile para los objetos
+obj/
+bin/
+build/
+
+# ===========================
+# 3. Archivos de Sistema y IDEs
+# ===========================
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# VS Code (Configuraciones locales del usuario)
+.vscode/
+
+# JetBrains (CLion, etc)
+.idea/
+cmake-build-debug/
+
+# Vim / Emacs (Archivos temporales y de backup)
+*~
+*.swp
+*.swo
+#*#
+
+# ===========================
+# 4. Logs y Debugging
+# ===========================
+# Salidas de Valgrind o GDB
+valgrind-out.txt
+core
+core.*
+*.log
+
+# ===========================
+# 5. Prevención de IA/Plagio (Opcional pero útil)
+# ===========================
+# Si usan IA para generar explicaciones, a veces guardan txts.
+# Mejor que los suban explícitamente si es parte de la entrega.
+# *.txt (Comentado: porque podrían subir notas legítimas)
