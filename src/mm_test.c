@@ -49,25 +49,35 @@ int test_basic_allocation() {
 int test_reuse() {
     printf(COLOR_YELLOW "\n=== TEST 2: Reutilización de Memoria ===\n" COLOR_RESET);
     
-    INFO("Asignando bloque A (128 bytes)...");
+   // 1. Crear un bloque "Guardian" para evitar coalescing con el Test 1
+    void *guard = my_malloc(10); 
+    
+    INFO("Asignando bloque Objetivo A (128 bytes)...");
     void *ptr1 = my_malloc(128);
     ASSERT(ptr1 != NULL, "Fallo malloc inicial");
     
-    INFO("Liberando bloque A...");
-    my_free(ptr1);
+    // 2. Crear otro "Guardian" para evitar coalescing hacia adelante (futuro)
+    void *guard2 = my_malloc(10);
+
+    INFO("Liberando bloque Objetivo A...");
+    my_free(ptr1); // Ahora ptr1 queda libre entre dos bloques ocupados (guards)
     
     INFO("Solicitando bloque B (128 bytes)...");
     void *ptr2 = my_malloc(128);
     ASSERT(ptr2 != NULL, "Fallo segundo malloc");
     
-    printf("    Ptr1: %p\n    Ptr2: %p\n", ptr1, ptr2);
+    printf("    Ptr1 (Original): %p\n    Ptr2 (Nuevo):    %p\n", ptr1, ptr2);
     
     // Si ptr1 == ptr2, significa que el allocator reusó el espacio.
     // Si ptr1 != ptr2, significa que pidió más RAM al OS innecesariamente.
     ASSERT(ptr1 == ptr2, "El allocator NO reutilizó el bloque libre. Se desperdicia memoria.");
     
+    // Limpieza
     my_free(ptr2);
-    PASS("El bloque fue reutilizado correctamente (Estrategia First-Fit/Best-Fit detectada)");
+    my_free(guard);
+    my_free(guard2);
+    
+    PASS("El bloque fue reutilizado correctamente en su lugar exacto");    
     return 1;
 }
 
