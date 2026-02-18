@@ -13,7 +13,7 @@ void *my_malloc(size_t size) {
 
 void my_free(void *ptr) {
     // TODO: Marcar el bloque como libre.
-    // Bonus: Fusionar bloques adyacentes (Coalescing).
+    // TODO: Fusionar bloques adyacentes (Coalescing).
 }
 
 void *my_calloc(size_t nmemb, size_t size) {

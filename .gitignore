@@ -24,6 +24,7 @@ test_runner
 obj/
 bin/
 build/
+solution/
 
 # ===========================
 # 3. Archivos de Sistema y IDEs

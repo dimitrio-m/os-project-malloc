@@ -125,8 +125,8 @@ La nota final (20%) se distribuye así:
 
 | Criterio | Peso | Descripción |
 | --- | --- | --- |
-| **Funcionalidad Básica** | 40% | El código compila y `malloc`/`free` funcionan sin errores de segmentación. |
-| **Reutilización** | 30% | El sistema reutiliza bloques liberados en lugar de pedir siempre memoria nueva (el heap no crece infinitamente). |
+| **Funcionalidad Básica** | 30% | El código compila y `malloc`/`free` funcionan sin errores de segmentación. |
+| **Coalescing & Reutilización** | 40% | El sistema reutiliza bloques liberados en lugar de pedir siempre memoria nueva (el heap no crece infinitamente). El sistema fusiona bloques adyacentes libres. Si el heap se fragmenta en bloques pequeños inutilizables, se pierden estos puntos.|
 | **Robustez** | 15% | `calloc` y `realloc` funcionan correctamente y manejan casos bordes (punteros NULL, tamaño 0). |
 | **Defensa Oral** | 15% | Capacidad para explicar tu aritmética de punteros y decisiones de diseño en vivo. |
 

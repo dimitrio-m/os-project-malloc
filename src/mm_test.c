@@ -166,6 +166,52 @@ int test_stress() {
 }
 
 // --------------------------------------------------------------------------
+// TEST 6: Coalescing Obligatorio (Fusión de Bloques)
+// REQUISITO: Si liberamos dos bloques adyacentes, deben unirse en uno grande.
+// --------------------------------------------------------------------------
+int test_coalescing() {
+    printf(COLOR_YELLOW "\n=== TEST 6: Coalescing (Fusión Obligatoria) ===\n" COLOR_RESET);
+
+    // 1. Asignamos 3 bloques contiguos
+    INFO("Asignando bloques A, B y C (64 bytes c/u)...");
+    void *ptrA = my_malloc(64);
+    void *ptrB = my_malloc(64);
+    void *ptrC = my_malloc(64);
+
+    ASSERT(ptrA != NULL && ptrB != NULL && ptrC != NULL, "Fallo en malloc inicial");
+
+    // 2. Liberamos A y B. 
+    // Si hay coalescing, ahora debería haber un hueco de ~128 bytes + header en ptrA.
+    // Si NO hay coalescing, hay dos huecos separados de 64 bytes.
+    INFO("Liberando bloque A y bloque B...");
+    my_free(ptrA);
+    my_free(ptrB);
+
+    // 3. Pedimos un bloque de 100 bytes.
+    // - Con Coalescing: Cabe perfecto en el espacio fusionado de A+B.
+    // - Sin Coalescing: No cabe en A (64) ni en B (64). El allocator pedirá más RAM (sbrk).
+    INFO("Solicitando bloque D (100 bytes)...");
+    void *ptrD = my_malloc(100);
+    
+    printf("    PtrA (Original): %p\n", ptrA);
+    printf("    PtrD (Nuevo):    %p\n", ptrD);
+
+    // Verificación estricta
+    if (ptrD == ptrA) {
+        PASS("¡Coalescing exitoso! Los bloques A y B se fusionaron.");
+        
+        // Limpieza final
+        my_free(ptrD);
+        my_free(ptrC);
+        return 1;
+    } else {
+        printf(COLOR_RED "[FAIL] No hubo fusión. El bloque D se asignó en una nueva dirección.\n" COLOR_RESET);
+        printf(COLOR_RED "       Se esperaba reutilizar %p, pero se obtuvo %p\n" COLOR_RESET, ptrA, ptrD);
+        return 0;
+    }
+}
+
+// --------------------------------------------------------------------------
 // MAIN
 // --------------------------------------------------------------------------
 int main() {
@@ -174,13 +220,14 @@ int main() {
     printf("========================================\n" COLOR_RESET);
     
     int score = 0;
-    int total = 5;
+    int total = 6;
     
     if (test_basic_allocation()) score++;
     if (test_reuse()) score++;
     if (test_calloc()) score++;
     if (test_realloc()) score++;
     if (test_stress()) score++;
+    if (test_coalescing()) score++;
     
     printf(COLOR_BLUE "\n========================================\n");
     printf("RESULTADO FINAL: %d/%d TESTS PASADOS\n", score, total);
